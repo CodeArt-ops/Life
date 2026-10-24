@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#2a121b" />
+  <title>For You — A Birthday Garden</title>
+
+  <!-- Romantic serif and clean UI typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:ital,wght@0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Modular Stylesheets -->
+  <link rel="stylesheet" href="./src/styles/base.css" />
+  <link rel="stylesheet" href="./src/styles/garden-envelope.css" />
+  <link rel="stylesheet" href="./src/styles/viewer-ui.css" />
+</head>
+<body>
+  <main id="app" class="app-stage" aria-live="polite">
+    <!-- Persistent Background Environment (Sky, Garden, Scene 2 Image Layer, Petals) -->
+    <div id="garden-environment" class="garden-environment" aria-hidden="true">
+      <div class="sky-gradient-layer"></div>
+      <div class="sunlight-glow-layer"></div>
+
+      <!-- Dedicated Layer for Assets/Background/scene2background.png (22% opacity fade-in) -->
+      <div id="scene2-bg-layer" class="scene2-bg-layer"></div>
+
+      <!-- Ambient Vignette and Soft Mist -->
+      <div class="garden-mist-layer"></div>
+
+      <!-- Procedural Botanical Frame (Roses, Leaves, Vines) -->
+      <div id="garden-foliage-layer" class="garden-foliage-layer"></div>
+
+      <!-- Floating Rose Petals Layer -->
+      <div id="petal-container" class="petal-container"></div>
+    </div>
+
+    <!-- Top-Right Persistent Audio Control (Revealed once Music begins) -->
+    <header class="top-ui-bar">
+      <button
+        id="audio-toggle-btn"
+        class="audio-toggle-btn is-hidden"
+        type="button"
+        aria-label="Pause background music"
+        aria-pressed="true"
+      >
+        <span class="audio-bars" aria-hidden="true">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </span>
+        <span id="audio-toggle-label" class="audio-toggle-label">Music On</span>
+      </button>
+    </header>
+
+    <!-- SCENE 1: Full-Screen Cinematic Birthday Introduction -->
+    <section
+      id="intro-scene"
+      class="scene-layer intro-scene"
+      aria-label="Birthday introduction"
+    >
+      <div class="intro-stage">
+        <h1 id="intro-msg-1" class="intro-title">Happy Birthday My Women</h1>
+        <p id="intro-msg-2" class="intro-title intro-title--secondary">
+          Congratulations my girl, you're 17 now
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENES 2, 3, 4, 5: Central Sealed Envelope & Emergence Stage -->
+    <section
+      id="envelope-scene"
+      class="scene-layer envelope-scene is-hidden"
+      aria-label="Garden envelope stage"
+    >
+      <div id="envelope-mover" class="envelope-mover">
+        <!-- Decorative floral garnish framing the envelope -->
+        <div class="envelope-floral-halo" aria-hidden="true">
+          <span class="halo-bloom halo-bloom--tl"></span>
+          <span class="halo-bloom halo-bloom--tr"></span>
+          <span class="halo-bloom halo-bloom--bl"></span>
+          <span class="halo-bloom halo-bloom--br"></span>
+          <span class="halo-leaf halo-leaf--left"></span>
+          <span class="halo-leaf halo-leaf--right"></span>
+        </div>
+
+        <!-- Interactive Sealed Envelope -->
+        <div
+          id="envelope-interactive"
+          class="envelope-wrapper"
+          role="button"
+          tabindex="0"
+          aria-label="Tap to open your birthday letter"
+        >
+          <div class="envelope-shadow" aria-hidden="true"></div>
+
+          <div class="envelope-body">
+            <!-- Back inner lining of the envelope -->
+            <div class="envelope-interior"></div>
+
+            <!-- Rising Letter Preview inside the envelope pocket -->
+            <div id="envelope-letter-slot" class="envelope-letter-slot">
+              <div id="emerging-letter-card" class="emerging-letter-card">
+                <img
+                  id="emerging-letter-img"
+                  class="emerging-letter-img"
+                  src="./Assets/Letters/Letter_1.png"
+                  alt="Emerging birthday letter"
+                  draggable="false"
+                />
+              </div>
+            </div>
+
+            <!-- Envelope Front Side & Bottom Pocket Folds ( overlaps rising letter ) -->
+            <div class="envelope-pocket-left" aria-hidden="true"></div>
+            <div class="envelope-pocket-right" aria-hidden="true"></div>
+            <div class="envelope-pocket-bottom" aria-hidden="true"></div>
+
+            <!-- Independently Hinged Upper Flap -->
+            <div id="envelope-flap" class="envelope-flap" aria-hidden="true">
+              <div class="envelope-flap-front"></div>
+              <div class="envelope-flap-back"></div>
+              <!-- Romantic Rose Wax Seal -->
+              <div id="envelope-seal" class="envelope-seal">
+                <span class="seal-emblem">❀</span>
+              </div>
+            </div>
+          </div>
+
+          <p id="envelope-prompt" class="envelope-prompt">
+            <span class="prompt-sparkle">✦</span>
+            <span id="envelope-prompt-text">Tap the seal to open your letter</span>
+            <span class="prompt-sparkle">✦</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENES 3 & 5: Full-Resolution Interactive Letter Viewer & Controls -->
+    <section
+      id="letter-viewer-scene"
+      class="scene-layer letter-viewer-scene is-hidden"
+      aria-label="Birthday letter viewer"
+    >
+      <!-- Zoom & Pan Controls Toolbar -->
+      <div
+        id="viewer-toolbar"
+        class="viewer-toolbar is-hidden"
+        role="toolbar"
+        aria-label="Letter image zoom controls"
+      >
+        <button
+          id="zoom-out-btn"
+          class="viewer-tool-btn"
+          type="button"
+          aria-label="Zoom out"
+          title="Zoom out"
+        >
+          <span aria-hidden="true">−</span>
+        </button>
+        <span id="zoom-level-indicator" class="zoom-level-indicator" aria-live="off">
+          100%
+        </span>
+        <button
+          id="zoom-in-btn"
+          class="viewer-tool-btn"
+          type="button"
+          aria-label="Zoom in"
+          title="Zoom in"
+        >
+          <span aria-hidden="true">+</span>
+        </button>
+        <button
+          id="zoom-reset-btn"
+          class="viewer-tool-btn viewer-tool-btn--text"
+          type="button"
+          aria-label="Reset letter view"
+          title="Fit full letter in screen"
+        >
+          Reset
+        </button>
+      </div>
+
+      <!-- Interactive Pinch-to-Zoom and Drag-to-Pan Viewport -->
+      <div id="letter-viewport" class="letter-viewport">
+        <div id="letter-transform-layer" class="letter-transform-layer">
+          <img
+            id="active-letter-img"
+            class="active-letter-img"
+            src="./Assets/Letters/Letter_1.png"
+            alt="Birthday letter"
+            draggable="false"
+          />
+        </div>
+      </div>
+
+      <!-- Bottom Action Area for Delayed "next →" Button -->
+      <div class="viewer-footer">
+        <p id="viewer-hint" class="viewer-hint">Pinch or use + / − to read closely</p>
+        <button
+          id="next-letter-btn"
+          class="next-letter-btn is-hidden"
+          type="button"
+          disabled
+        >
+          <span class="next-btn-label">next</span>
+          <span class="next-btn-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+    </section>
+
+    <<!-- SCENE 6: Intentional Final Garden Keepsake State -->
+    <section
+      id="final-scene"
+      class="scene-layer final-scene is-hidden"
+      aria-label="Birthday finale keepsake"
+    >
+      <div class="final-card">
+        <!-- Deep Orange Fire Art Background inside Card -->
+        <div class="final-fire-art" aria-hidden="true">
+          <svg
+            class="fire-svg"
+            viewBox="0 0 400 320"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id="deepFireGrad1" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#b71c1c" stop-opacity="0.55" />
+                <stop offset="55%" stop-color="#e65100" stop-opacity="0.38" />
+                <stop offset="100%" stop-color="#ff8f00" stop-opacity="0.05" />
+              </linearGradient>
+              <linearGradient id="deepFireGrad2" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#d84315" stop-opacity="0.65" />
+                <stop offset="65%" stop-color="#ef6c00" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#ffa726" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+
+            <!-- Back Flame Waves -->
+            <path
+              class="flame-wave flame-wave--back"
+              fill="url(#deepFireGrad1)"
+              d="M0,320 L0,190 Q35,120 65,175 Q105,85 145,165 Q195,60 235,155 Q280,90 320,170 Q360,110 400,180 L400,320 Z"
+            />
+            <!-- Front Deep Orange Flame Tongues -->
+            <path
+              class="flame-wave flame-wave--front"
+              fill="url(#deepFireGrad2)"
+              d="M0,320 L0,220 Q45,140 85,210 Q130,115 175,200 Q215,105 260,195 Q310,125 350,205 Q380,155 400,215 L400,320 Z"
+            />
+            <!-- Rising Fire Embers / Sparks -->
+            <circle cx="55" cy="135" r="4" fill="#d84315" opacity="0.45" />
+            <circle cx="135" cy="95" r="5.5" fill="#e65100" opacity="0.4" />
+            <circle cx="205" cy="75" r="4.5" fill="#bf360c" opacity="0.45" />
+            <circle cx="285" cy="105" r="5" fill="#e65100" opacity="0.4" />
+            <circle cx="345" cy="130" r="3.5" fill="#d84315" opacity="0.45" />
+          </svg>
+        </div>
+
+        <!-- Top Heart on Fire Emoji Crest -->
+        <div class="final-crest" aria-hidden="true">❤️‍🔥</div>
+
+        <!-- Dark Bold Message on Top -->
+        <p class="final-message">
+          You've fought your all battles alone, don't let those people decide your life and happiness. Fight for yourself! I'm always with YOU!!
+        </p>
+      </div>
+    </section>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

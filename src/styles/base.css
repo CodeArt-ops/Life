@@ -1,0 +1,185 @@
+:root {
+  /* Romantic Rose, Blush, Cream, and Twilight Sky Palette */
+  --bg-deep-rose: #241019;
+  --bg-twilight-plum: #3b1929;
+  --bg-warm-blush: #6e3048;
+  --bg-horizon-peach: #b86b7e;
+  --rose-primary: #e47896;
+  --rose-soft: #f6b6c8;
+  --rose-light: #fde8ee;
+  --cream-paper: #fffaf5;
+  --cream-warm: #f7eadf;
+  --gold-accent: #e8c391;
+  --wax-crimson: #9e233b;
+  --wax-highlight: #c93b56;
+  --text-ivory: #fff8fa;
+  --text-muted-blush: rgba(255, 236, 242, 0.82);
+  --glass-surface: rgba(45, 18, 30, 0.68);
+  --glass-border: rgba(255, 214, 226, 0.28);
+
+  /* Typography */
+  --font-display: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Easing Curves */
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.45, 0, 0.15, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background-color: var(--bg-deep-rose);
+  color: var(--text-ivory);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+.app-stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.scene-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px);
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+button:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid var(--gold-accent);
+  outline-offset: 4px;
+}
+
+/* ==========================================================================
+   SCENE 1: CINEMATIC BIRTHDAY INTRODUCTION
+   ========================================================================== */
+.intro-scene {
+  z-index: 40;
+  background: radial-gradient(
+      circle at 50% 35%,
+      rgba(228, 120, 150, 0.24) 0%,
+      rgba(59, 25, 41, 0.88) 55%,
+      rgba(28, 10, 18, 0.96) 100%
+    );
+  backdrop-filter: blur(8px);
+  transition: opacity 1s var(--ease-cinematic);
+}
+
+.intro-scene.is-fading-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-stage {
+  position: relative;
+  width: min(92vw, 760px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+}
+
+.intro-title {
+  position: absolute;
+  width: 100%;
+  padding: 0 12px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.35rem, 8.5vw, 4.75rem);
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  color: var(--text-ivory);
+  text-shadow:
+    0 6px 28px rgba(228, 120, 150, 0.55),
+    0 2px 10px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform: translate3d(0, 42vh, 0) scale(0.96);
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.intro-title--secondary {
+  font-size: clamp(2.1rem, 7.6vw, 4.25rem);
+  color: var(--rose-light);
+}
+
+.intro-title.is-animating {
+  animation: cinematicRiseUp 3.9s var(--ease-cinematic) forwards;
+}
+
+.intro-title--secondary.is-animating {
+  animation: cinematicRiseUp 4.1s var(--ease-cinematic) forwards;
+}
+
+.intro-title.is-complete {
+  opacity: 0;
+  transform: translate3d(0, -45vh, 0);
+}
+
+@keyframes cinematicRiseUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 38vh, 0) scale(0.95);
+  }
+  20% {
+    opacity: 1;
+    transform: translate3d(0, 8vh, 0) scale(1);
+  }
+  72% {
+    opacity: 1;
+    transform: translate3d(0, -8vh, 0) scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -42vh, 0) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-title.is-animating,
+  .intro-title--secondary.is-animating {
+    animation-duration: 1.8s;
+  }
+}
